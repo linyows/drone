@@ -14,12 +14,13 @@ const (
 )
 
 type IRC struct {
-	Channel string
-	Nick    string
-	Server  string
-	Started *bool `yaml:"on_started,omitempty"`
-	Success *bool `yaml:"on_success,omitempty"`
-	Failure *bool `yaml:"on_failure,omitempty"`
+	Channel  string
+	Nick     string
+	Server   string
+	Password string
+	Started  *bool `yaml:"on_started,omitempty"`
+	Success  *bool `yaml:"on_success,omitempty"`
+	Failure  *bool `yaml:"on_failure,omitempty"`
 }
 
 func (i *IRC) Send(req *model.Request) error {
@@ -56,6 +57,10 @@ func (i *IRC) send(channel string, message string) error {
 
 	if client == nil {
 		return fmt.Errorf("Error creating IRC client")
+	}
+
+	if i.Password != nil {
+		client.Password = i.Password
 	}
 
 	err := client.Connect(i.Server)
